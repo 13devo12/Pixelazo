@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pedido confirmado — Pixelazo</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;600;700&display=swap');
+  body{
+    margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center;
+    background:#12122b; color:#f4f3ee; font-family:'Space Grotesk', sans-serif; text-align:center;
+    padding: 24px;
+  }
+  .box{ max-width: 440px; }
+  .check{
+    width:64px; height:64px; border-radius:50%; background:#3ee6a8;
+    display:flex; align-items:center; justify-content:center; margin: 0 auto 24px;
+    font-size: 30px; color:#12122b;
+  }
+  h1{ font-family:'Archivo Black'; font-size: 26px; margin: 0 0 12px; }
+  p{ color:#a9a9c4; line-height:1.6; font-size:15px; margin: 0 0 24px; }
+  #order-id{ color:#ffcc00; font-weight:700; }
+  a.btn{
+    display:inline-block; background:#ffcc00; color:#12122b; text-decoration:none;
+    font-weight:700; padding: 13px 26px; border-radius: 8px;
+  }
+</style>
+</head>
+<body>
+  <div class="box">
+    <div class="check">✓</div>
+    <h1>¡Pedido confirmado!</h1>
+    <p>
+      Hemos recibido tu pago correctamente. En breve recibirás por email la
+      factura y los datos de envío.<br><br>
+      Referencia: <span id="order-id">—</span>
+    </p>
+    <a class="btn" href="index.html">Volver a la tienda</a>
+  </div>
+
+  <script>
+    // Muestra el ID de la Checkout Session como referencia visible.
+    // Para mostrar datos reales del pedido (importe, email, etc.), tu
+    // backend puede exponer un endpoint GET /order/:session_id que consulte
+    // stripe.checkout.sessions.retrieve(session_id) y los devuelva aquí.
+    const params = new URLSearchParams(window.location.search);
+    const sessionId = params.get('session_id');
+    if (sessionId) {
+      document.getElementById('order-id').textContent = sessionId;
+    }
+  </script>
+</body>
+</html>

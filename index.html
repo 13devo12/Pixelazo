@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pixelazo — Consolas al mejor precio</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+  :root{
+    --ink:#12122b;
+    --ink-soft:#1c1c3f;
+    --paper:#f4f3ee;
+    --zap:#ffcc00;
+    --pink:#ff4d6d;
+    --mint:#3ee6a8;
+    --muted:#8c8ca8;
+    --line: rgba(244,243,238,0.14);
+  }
+
+  *{ box-sizing: border-box; }
+
+  html{ scroll-behavior: smooth; }
+
+  body{
+    margin:0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Space Grotesk', sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .display{ font-family: 'Archivo Black', sans-serif; text-transform: none; }
+
+  a{ color: inherit; }
+
+  /* ---------- NAV ---------- */
+  header{
+    position: sticky; top:0; z-index: 50;
+    background: var(--ink);
+    color: var(--paper);
+    border-bottom: 3px solid var(--zap);
+  }
+  .nav-wrap{
+    max-width: 1180px; margin:0 auto;
+    display:flex; align-items:center; justify-content: space-between;
+    padding: 16px 24px;
+  }
+  .logo{
+    font-family:'Archivo Black', sans-serif;
+    font-size: 22px;
+    letter-spacing: 0.5px;
+    display:flex; align-items:center; gap:8px;
+  }
+  .logo span.dot{ color: var(--zap); }
+  nav.links{ display:flex; gap: 28px; font-size:15px; font-weight:500;}
+  nav.links a{ text-decoration:none; opacity:0.85; transition: opacity .15s; }
+  nav.links a:hover{ opacity:1; }
+  .cart-pill{
+    display:flex; align-items:center; gap:8px;
+    background: var(--zap); color: var(--ink);
+    padding: 9px 16px; border-radius: 999px;
+    font-weight:700; font-size:14px; border:none; cursor:pointer;
+  }
+  .cart-pill:hover{ background:#ffd83d; }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    background: var(--ink);
+    color: var(--paper);
+    padding: 64px 24px 88px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-wrap{
+    max-width: 1180px; margin: 0 auto;
+    display:grid; grid-template-columns: 1.15fr 0.85fr; gap: 48px;
+    align-items: center;
+  }
+  .eyebrow-strip{
+    display:inline-flex; align-items:center; gap:10px;
+    background: var(--pink); color:var(--ink);
+    padding: 6px 14px; border-radius: 6px;
+    font-weight:700; font-size: 13px; margin-bottom: 22px;
+  }
+  h1.hero-title{
+    font-size: clamp(34px, 5vw, 54px);
+    line-height: 1.05;
+    margin: 0 0 20px;
+    max-width: 16ch;
+  }
+  .hero p.sub{
+    font-size: 17px; line-height: 1.6; color: var(--muted);
+    max-width: 46ch; margin: 0 0 30px;
+  }
+  .hero-ctas{ display:flex; gap:14px; flex-wrap: wrap; }
+  .btn-primary{
+    background: var(--zap); color: var(--ink);
+    border:none; padding: 15px 26px; border-radius: 8px;
+    font-weight:700; font-size:16px; cursor:pointer;
+    box-shadow: 6px 6px 0 var(--pink);
+    transition: transform .12s, box-shadow .12s;
+  }
+  .btn-primary:hover{ transform: translate(-2px,-2px); box-shadow: 8px 8px 0 var(--pink); }
+  .btn-ghost{
+    background:transparent; color: var(--paper);
+    border: 1.5px solid var(--line); padding: 15px 26px;
+    border-radius: 8px; font-weight:600; font-size:16px; cursor:pointer;
+  }
+  .btn-ghost:hover{ border-color: var(--paper); }
+
+  /* receipt ticket */
+  .ticket{
+    background: var(--paper); color: var(--ink);
+    padding: 26px 26px 22px;
+    border-radius: 4px;
+    position: relative;
+    font-family: 'Space Grotesk', monospace;
+    box-shadow: 0 30px 60px -20px rgba(0,0,0,0.5);
+    transform: rotate(1.5deg);
+  }
+  .ticket::before, .ticket::after{
+    content:""; position:absolute; left:0; right:0; height:14px;
+    background:
+      radial-gradient(circle at 8px 8px, var(--ink) 7px, transparent 7.5px) repeat-x;
+    background-size: 22px 16px;
+  }
+  .ticket::before{ top:-7px; }
+  .ticket::after{ bottom:-7px; transform: scaleY(-1); }
+  .ticket h4{ margin: 6px 0 14px; font-family:'Archivo Black'; font-size:15px; }
+  .ticket-row{ display:flex; justify-content: space-between; font-size:14px; padding: 7px 0; border-bottom: 1px dashed rgba(18,18,43,0.2); }
+  .ticket-row.total{ border-bottom:none; padding-top: 12px; font-weight:700; font-size: 16px; }
+  .ticket-row .strike{ text-decoration: line-through; color: var(--muted); }
+  .ticket-row .win{ color: #0e8a52; font-weight:700; }
+  .ticket-save{
+    margin-top: 14px; background: var(--mint); color: var(--ink);
+    text-align:center; padding: 9px; border-radius: 4px;
+    font-weight:700; font-size: 13.5px;
+  }
+
+  /* ---------- TRUST BAR ---------- */
+  .trust{
+    border-bottom: 1px solid #e4e1d6;
+    background: #fff;
+  }
+  .trust-wrap{
+    max-width: 1180px; margin:0 auto; padding: 18px 24px;
+    display:flex; justify-content: space-between; flex-wrap: wrap; gap: 14px 24px;
+  }
+  .trust-item{ display:flex; align-items:center; gap:10px; font-size: 13.5px; font-weight:600; color: var(--ink-soft); }
+  .trust-item .ico{ width:20px; height:20px; flex-shrink:0; }
+
+  /* ---------- FILTERS ---------- */
+  .section-wrap{ max-width: 1180px; margin: 0 auto; padding: 64px 24px 20px; }
+  .section-head{ display:flex; justify-content: space-between; align-items: flex-end; margin-bottom: 30px; gap: 20px; flex-wrap: wrap; }
+  .section-head h2{ font-family:'Archivo Black'; font-size: 30px; margin:0; }
+  .section-head p{ margin: 8px 0 0; color:#5b5b73; font-size:14.5px; max-width: 50ch; }
+
+  .filters{ display:flex; gap:10px; flex-wrap: wrap; }
+  .chip{
+    background: #fff; border: 1.5px solid #ddd9cb; color: var(--ink);
+    padding: 9px 18px; border-radius: 999px; font-weight:600; font-size:14px;
+    cursor:pointer; transition: all .15s;
+  }
+  .chip.active, .chip:hover{ background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+  /* ---------- GRID ---------- */
+  .grid{
+    display:grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 22px; padding: 0 24px 20px; max-width: 1180px; margin: 0 auto;
+  }
+  .card{
+    background:#fff; border:1px solid #e4e1d6; border-radius: 10px;
+    overflow:hidden; display:flex; flex-direction:column;
+    transition: transform .15s, box-shadow .15s;
+  }
+  .card:hover{ transform: translateY(-4px); box-shadow: 0 16px 30px -14px rgba(18,18,43,0.25); }
+  .card-media{
+    height: 168px; position:relative; display:flex; align-items:center; justify-content:center;
+    background: var(--brand-bg, #eceaf9);
+  }
+  .badge-discount{
+    position:absolute; top:12px; left:12px;
+    background: var(--pink); color:#fff; font-weight:700; font-size: 12.5px;
+    padding: 5px 10px; border-radius: 6px;
+  }
+  .badge-stock{
+    position:absolute; top:12px; right:12px;
+    background: rgba(18,18,43,0.85); color: var(--zap); font-weight:700; font-size: 11px;
+    padding: 5px 9px; border-radius: 6px;
+  }
+  .card-body{ padding: 16px 18px 18px; display:flex; flex-direction:column; gap: 8px; flex:1; }
+  .card-brand{ font-size: 11.5px; font-weight:700; letter-spacing: .3px; color: var(--muted); }
+  .card-name{ font-size: 16.5px; font-weight:700; margin: 0; line-height:1.3; }
+  .card-spec{ font-size: 12.5px; color: #6f6f88; margin-bottom: 4px; }
+  .price-row{ display:flex; align-items: baseline; gap: 10px; margin-top: auto; }
+  .price-new{ font-family:'Archivo Black'; font-size: 24px; }
+  .price-old{ font-size: 14px; color: var(--muted); text-decoration: line-through; }
+  .save-line{ font-size: 12.5px; color: #0e8a52; font-weight:700; }
+  .add-btn{
+    margin-top: 10px; width:100%; background: var(--ink); color: var(--paper);
+    border:none; padding: 11px; border-radius: 7px; font-weight:700; font-size: 14px;
+    cursor:pointer; transition: background .15s;
+  }
+  .add-btn:hover{ background: #26264f; }
+  .add-btn.added{ background: #0e8a52; }
+
+  /* console icon svgs share currentColor */
+  .console-icon{ width: 84px; height: 84px; color: var(--ink); opacity: 0.85; }
+
+  /* ---------- REFURB ---------- */
+  .refurb-section{ background:#eeece3; padding: 64px 0 70px; margin-top: 60px; }
+  .refurb-head-wrap{ max-width: 1180px; margin:0 auto; padding: 0 24px 30px; display:flex; justify-content: space-between; align-items:flex-end; gap:20px; flex-wrap:wrap; }
+  .refurb-head-wrap h2{ font-family:'Archivo Black'; font-size:30px; margin:0; }
+  .refurb-head-wrap p{ margin:8px 0 0; color:#5b5b73; font-size:14.5px; max-width:52ch; }
+  .refurb-tag{ display:inline-flex; align-items:center; gap:8px; background: var(--ink); color: var(--zap); font-weight:700; font-size:12.5px; padding:6px 12px; border-radius: 6px; margin-bottom:10px; }
+  .refurb-grid{ display:grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr)); gap:22px; max-width:1180px; margin:0 auto; padding:0 24px; }
+  .badge-condition{ position:absolute; top:12px; left:12px; font-weight:700; font-size:12.5px; padding:5px 10px; border-radius:6px; color:#fff; }
+  .badge-condition.muybueno{ background:#0e8a52; }
+  .badge-condition.aceptable{ background:#c98a1c; }
+  .badge-units{ position:absolute; top:12px; right:12px; background: rgba(18,18,43,0.85); color: var(--zap); font-weight:700; font-size:11px; padding:5px 9px; border-radius:6px; }
+  .condition-note{ font-size:12px; color:#6f6f88; margin: -2px 0 2px; }
+
+  /* ---------- STRIP ---------- */
+  .promo-strip{
+    background: var(--zap); color: var(--ink);
+    padding: 20px 0; overflow:hidden; white-space: nowrap; margin-top: 50px;
+    border-top: 3px solid var(--ink); border-bottom: 3px solid var(--ink);
+  }
+  .promo-strip .track{
+    display:inline-block; font-family:'Archivo Black'; font-size: 20px;
+    animation: scroll 22s linear infinite;
+  }
+  .promo-strip span{ margin: 0 26px; }
+  @keyframes scroll{ from{ transform: translateX(0);} to{ transform: translateX(-50%);} }
+
+  /* ---------- HOW IT WORKS ---------- */
+  .how{ background: var(--ink); color: var(--paper); padding: 70px 24px; margin-top: 60px; }
+  .how-wrap{ max-width: 1180px; margin:0 auto; }
+  .how h2{ font-family:'Archivo Black'; font-size: 28px; margin: 0 0 34px; }
+  .how-grid{ display:grid; grid-template-columns: repeat(3, 1fr); gap: 26px; }
+  .how-card{ background: var(--ink-soft); border-radius: 10px; padding: 24px; }
+  .how-num{ font-family:'Archivo Black'; color: var(--zap); font-size: 26px; margin-bottom: 12px; }
+  .how-card h3{ font-size:17px; margin: 0 0 8px; }
+  .how-card p{ font-size: 14px; color: var(--muted); line-height:1.55; margin:0; }
+
+  /* ---------- FAQ ---------- */
+  .faq{ max-width: 780px; margin: 70px auto; padding: 0 24px; }
+  .faq h2{ font-family:'Archivo Black'; font-size: 28px; margin-bottom: 26px; }
+  details{ border-bottom: 1px solid #e0ddd0; padding: 16px 0; }
+  summary{ cursor:pointer; font-weight:700; font-size: 15.5px; list-style:none; display:flex; justify-content:space-between; align-items:center; }
+  summary::-webkit-details-marker{ display:none; }
+  summary::after{ content:"+"; font-size: 22px; color: var(--pink); font-weight:400; }
+  details[open] summary::after{ content:"–"; }
+  details p{ margin: 12px 0 0; font-size: 14.5px; color: #55556b; line-height:1.6; }
+
+  /* ---------- FOOTER ---------- */
+  footer{ background: var(--ink); color: var(--muted); padding: 44px 24px 26px; font-size: 13.5px; }
+  .footer-wrap{ max-width: 1180px; margin:0 auto; display:flex; justify-content: space-between; flex-wrap:wrap; gap: 20px; }
+  .footer-wrap .logo{ color: var(--paper); margin-bottom: 10px; }
+  .legal-note{ max-width: 1180px; margin: 24px auto 0; padding: 20px 24px 0; border-top: 1px solid var(--line); font-size: 12px; line-height:1.6; color: #6a6a86; }
+
+  /* toast */
+  #toast{
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(20px);
+    background: var(--ink); color: var(--paper); padding: 13px 22px; border-radius: 8px;
+    font-weight:600; font-size: 14px; opacity:0; pointer-events:none; transition: all .25s;
+    border: 1px solid var(--zap); z-index: 100;
+  }
+  #toast.show{ opacity:1; transform: translateX(-50%) translateY(0); }
+
+  @media (max-width: 860px){
+    .hero-wrap{ grid-template-columns: 1fr; }
+    .how-grid{ grid-template-columns: 1fr; }
+    nav.links{ display:none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav-wrap">
+    <div class="logo">PIXEL<span class="dot">·</span>AZO</div>
+    <nav class="links">
+      <a href="#catalogo">Catálogo</a>
+      <a href="#reacondicionados">Reacondicionados</a>
+      <a href="#como-funciona">Cómo funciona</a>
+      <a href="#faq">Preguntas</a>
+    </nav>
+    <button class="cart-pill" onclick="checkout()">
+      🛒 Cesta (<span id="cart-count">0</span>)
+    </button>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-wrap">
+    <div>
+      <div class="eyebrow-strip">Precio comprobado hoy, 14 de septiembre</div>
+      <h1 class="hero-title display">Las mismas consolas, un 35% más baratas que en cualquier otra tienda.</h1>
+      <p class="sub">Comparamos cada día el precio oficial y el precio medio del mercado español, y lo recortamos un 35% de fábrica. Sin cupones raros, sin letra pequeña.</p>
+      <div class="hero-ctas">
+        <button class="btn-primary" onclick="document.getElementById('catalogo').scrollIntoView({behavior:'smooth'})">Ver el catálogo</button>
+        <button class="btn-ghost" onclick="document.getElementById('como-funciona').scrollIntoView({behavior:'smooth'})">¿Cómo lo hacemos?</button>
+      </div>
+    </div>
+    <div class="ticket">
+      <h4>TICKET DE AHORRO — PS5 SLIM</h4>
+      <div class="ticket-row"><span>Precio medio del mercado</span><span class="strike">459,99 €</span></div>
+      <div class="ticket-row"><span>Descuento Pixelazo (35%)</span><span>−161,00 €</span></div>
+      <div class="ticket-row total"><span>Tu precio hoy</span><span class="win">298,99 €</span></div>
+      <div class="ticket-save">Te ahorras 161 € frente a la media del mercado</div>
+    </div>
+  </div>
+</section>
+
+<div class="trust">
+  <div class="trust-wrap">
+    <div class="trust-item"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="7" width="15" height="10" rx="1"/><path d="M16 10h3l3 3v4h-6z"/><circle cx="6" cy="19" r="2"/><circle cx="18" cy="19" r="2"/></svg> Envío 24–48h a toda España</div>
+    <div class="trust-item"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6z"/></svg> 2 años de garantía oficial</div>
+    <div class="trust-item"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg> 30 días para devoluciones</div>
+    <div class="trust-item"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg> Pago a plazos disponible</div>
+  </div>
+</div>
+
+<div class="section-wrap" id="catalogo">
+  <div class="section-head">
+    <div>
+      <h2>El catálogo</h2>
+      <p>Precio medio de referencia calculado sobre tiendas oficiales y grandes superficies en España, septiembre de 2026.</p>
+    </div>
+    <div class="filters">
+      <button class="chip active" data-filter="all">Todas</button>
+      <button class="chip" data-filter="sony">PlayStation</button>
+      <button class="chip" data-filter="xbox">Xbox</button>
+      <button class="chip" data-filter="nintendo">Nintendo</button>
+      <button class="chip" data-filter="valve">Steam Deck</button>
+    </div>
+  </div>
+</div>
+
+<div class="grid" id="grid"></div>
+
+<div class="promo-strip">
+  <div class="track">
+    <span>35% MENOS QUE LA MEDIA DEL MERCADO</span>
+    <span>✷</span>
+    <span>ENVÍO EN 24–48H</span>
+    <span>✷</span>
+    <span>GARANTÍA OFICIAL 2 AÑOS</span>
+    <span>✷</span>
+    <span>35% MENOS QUE LA MEDIA DEL MERCADO</span>
+    <span>✷</span>
+    <span>ENVÍO EN 24–48H</span>
+    <span>✷</span>
+    <span>GARANTÍA OFICIAL 2 AÑOS</span>
+    <span>✷</span>
+  </div>
+</div>
+
+<section class="refurb-section" id="reacondicionados">
+  <div class="refurb-head-wrap">
+    <div>
+      <div class="refurb-tag">♻ Stock limitado</div>
+      <h2>Reacondicionados</h2>
+      <p>Unidades de segunda mano revisadas y verificadas, con el mismo periodo de garantía que el resto del catálogo. En cuanto se agota una unidad, desaparece de la lista.</p>
+    </div>
+  </div>
+  <div class="refurb-grid" id="refurb-grid"></div>
+</section>
+
+<section class="how" id="como-funciona">
+  <div class="how-wrap">
+    <h2>Cómo conseguimos el 35% menos</h2>
+    <div class="how-grid">
+      <div class="how-card">
+        <div class="how-num">01</div>
+        <h3>Rastreamos el precio real</h3>
+        <p>Cada mañana revisamos el precio oficial y el precio medio de venta en las principales tiendas españolas para cada modelo.</p>
+      </div>
+      <div class="how-card">
+        <div class="how-num">02</div>
+        <h3>Recortamos un 35%</h3>
+        <p>Aplicamos el descuento directamente sobre esa media, sin inflar antes el precio para luego "rebajarlo".</p>
+      </div>
+      <div class="how-card">
+        <div class="how-num">03</div>
+        <h3>Stock limitado por lote</h3>
+        <p>Compramos por volumen y trasladamos el ahorro mientras dura el lote. Cuando se agota, se acabó ese precio.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="faq" id="faq">
+  <h2 class="display">Preguntas frecuentes</h2>
+  <details open>
+    <summary>¿De dónde sale el precio "de mercado" con el que comparáis?</summary>
+    <p>Es la media que hemos observado a fecha de hoy entre la tienda oficial del fabricante y los principales retailers españoles para el mismo modelo, capacidad y edición.</p>
+  </details>
+  <details>
+    <summary>¿Las consolas son nuevas y originales?</summary>
+    <p>Sí, todas las unidades son nuevas, precintadas y con garantía oficial del fabricante en España.</p>
+  </details>
+  <details>
+    <summary>¿Qué pasa si el precio de mercado baja después de mi compra?</summary>
+    <p>Si el precio medio de mercado del mismo modelo baja en los 7 días siguientes a tu pedido, te devolvemos la diferencia.</p>
+  </details>
+  <details>
+    <summary>¿Puedo pagar a plazos?</summary>
+    <p>Sí, en el checkout puedes fraccionar el pago en 3 o 12 meses a través de nuestro socio financiero.</p>
+  </details>
+</section>
+
+<footer>
+  <div class="footer-wrap">
+    <div>
+      <div class="logo display">PIXEL·AZO</div>
+      <p style="max-width:32ch; line-height:1.6;">Consolas al precio que deberían tener, no al que las infla el mercado.</p>
+    </div>
+    <div>
+      <strong style="color:var(--paper)">Atención al cliente</strong><br><br>
+      Lun–Vie, 9:00–20:00<br>
+      hola@pixelazo.es
+    </div>
+    <div>
+      <strong style="color:var(--paper)">Comprar</strong><br><br>
+      Catálogo · Ofertas · Garantía · Devoluciones
+    </div>
+  </div>
+  <div class="legal-note">
+    Los "precios de mercado" mostrados son estimaciones de referencia recopiladas de fuentes públicas a fecha del 14/09/2026 y pueden variar. Página de demostración creada como maqueta de tienda online; para operar como comercio real se necesitaría pasarela de pago, gestión de stock y cumplimiento legal (LSSI, protección de datos, garantías de consumo).
+  </div>
+</footer>
+
+<div id="toast"></div>
+
+<script>
+const PRODUCTS = [
+  {
+    id:'ps5-digital', brand:'sony', brandLabel:'PlayStation', name:'PS5 Slim Edición Digital',
+    spec:'1TB SSD · sin lector de discos', market:459.99, price:298.99, bg:'#e7ecfb',
+    stock:'Quedan 14', icon: 'pad'
+  },
+  {
+    id:'ps5-disc', brand:'sony', brandLabel:'PlayStation', name:'PS5 Slim con lector',
+    spec:'1TB SSD · lector Blu-ray 4K', market:549.99, price:357.49, bg:'#e7ecfb',
+    stock:'Quedan 9', icon:'pad'
+  },
+  {
+    id:'ps5-pro', brand:'sony', brandLabel:'PlayStation', name:'PS5 Pro',
+    spec:'2TB SSD · GPU de alto rendimiento', market:799.99, price:519.99, bg:'#e7ecfb',
+    stock:'Últimas unidades', icon:'pad'
+  },
+  {
+    id:'xbox-x', brand:'xbox', brandLabel:'Xbox', name:'Xbox Series X',
+    spec:'1TB SSD · con lector · 4K nativo', market:799.99, price:519.99, bg:'#e5f6ea',
+    stock:'Quedan 11', icon:'box'
+  },
+  {
+    id:'xbox-s', brand:'xbox', brandLabel:'Xbox', name:'Xbox Series S',
+    spec:'1TB SSD · solo digital', market:599.99, price:389.99, bg:'#e5f6ea',
+    stock:'Quedan 20', icon:'box'
+  },
+  {
+    id:'switch2', brand:'nintendo', brandLabel:'Nintendo', name:'Nintendo Switch 2',
+    spec:'Híbrida · Joy-Con 2 incluidos', market:499.99, price:324.99, bg:'#fdece7',
+    stock:'Quedan 17', icon:'hybrid'
+  },
+  {
+    id:'deck-512', brand:'valve', brandLabel:'Steam Deck', name:'Steam Deck OLED 512GB',
+    spec:'Pantalla OLED HDR · SteamOS', market:779.00, price:506.99, bg:'#f1e9fb',
+    stock:'Quedan 6', icon:'handheld'
+  },
+  {
+    id:'deck-1tb', brand:'valve', brandLabel:'Steam Deck', name:'Steam Deck OLED 1TB',
+    spec:'Pantalla OLED HDR · SteamOS', market:919.00, price:597.99, bg:'#f1e9fb',
+    stock:'Quedan 4', icon:'handheld'
+  }
+];
+
+const REFURB_PRODUCTS = [
+  {
+    id:'refurb-ps5pro', brandLabel:'PlayStation', name:'PS5 Pro',
+    spec:'2TB SSD · con lector aparte', condition:'Muy bueno',
+    conditionNote:'Sin marcas visibles de uso, funcionamiento como nueva', price:599.00, units:4, bg:'#e7ecfb', icon:'pad'
+  },
+  {
+    id:'refurb-xboxx', brandLabel:'Xbox', name:'Xbox Series X',
+    spec:'1TB SSD · con lector', condition:'Aceptable',
+    conditionNote:'Marcas de uso visibles, funcionamiento 100% correcto', price:589.99, units:2, bg:'#e5f6ea', icon:'box'
+  },
+  {
+    id:'refurb-switch2-bueno', brandLabel:'Nintendo', name:'Nintendo Switch 2',
+    spec:'Híbrida · Joy-Con 2 incluidos', condition:'Muy bueno',
+    conditionNote:'Sin marcas visibles de uso, funcionamiento como nueva', price:350.00, units:10, bg:'#fdece7', icon:'hybrid'
+  },
+  {
+    id:'refurb-switch2-aceptable', brandLabel:'Nintendo', name:'Nintendo Switch 2',
+    spec:'Híbrida · Joy-Con 2 incluidos', condition:'Aceptable',
+    conditionNote:'Marcas de uso visibles, funcionamiento 100% correcto', price:299.00, units:3, bg:'#fdece7', icon:'hybrid'
+  }
+];
+
+const ICONS = {
+  pad: `<svg class="console-icon" viewBox="0 0 100 100"><path d="M22 46c0-10 8-18 18-18h20c10 0 18 8 18 18l3 20c1.5 8-6 14-12 9l-9-7H40l-9 7c-6 5-13.5-1-12-9z" fill="currentColor" fill-opacity="0.12" stroke="currentColor" stroke-width="3.5" stroke-linejoin="round"/><path d="M34 50h10M39 45v10" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><circle cx="70" cy="46" r="3.2" fill="currentColor"/><circle cx="63" cy="53" r="3.2" fill="currentColor"/><circle cx="77" cy="53" r="3.2" fill="currentColor"/><circle cx="70" cy="60" r="3.2" fill="currentColor" fill-opacity="0.5"/><circle cx="40" cy="60" r="4" fill="none" stroke="currentColor" stroke-width="2.5"/></svg>`,
+  box: `<svg class="console-icon" viewBox="0 0 100 100"><path d="M35 14h30l8 10v52a6 6 0 0 1-6 6H33a6 6 0 0 1-6-6V24z" fill="currentColor" fill-opacity="0.12" stroke="currentColor" stroke-width="3.5" stroke-linejoin="round"/><path d="M35 14l-8 10h46l-8-10" stroke="currentColor" stroke-width="3" fill="none" stroke-linejoin="round"/><circle cx="50" cy="30" r="3" fill="currentColor"/><path d="M40 46h20M40 54h20M40 62h20M40 70h20" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" opacity="0.6"/><rect x="30" y="82" width="40" height="4" rx="2" fill="currentColor" fill-opacity="0.3"/></svg>`,
+  hybrid: `<svg class="console-icon" viewBox="0 0 100 100"><rect x="15" y="30" width="14" height="40" rx="5" fill="currentColor" fill-opacity="0.14" stroke="currentColor" stroke-width="3"/><rect x="71" y="30" width="14" height="40" rx="5" fill="currentColor" fill-opacity="0.14" stroke="currentColor" stroke-width="3"/><rect x="33" y="22" width="34" height="56" rx="4" fill="currentColor" fill-opacity="0.08" stroke="currentColor" stroke-width="3.5"/><rect x="38" y="28" width="24" height="34" rx="2" fill="currentColor" fill-opacity="0.18"/><circle cx="22" cy="60" r="3.5" fill="currentColor"/><circle cx="78" cy="42" r="3" fill="currentColor"/><circle cx="78" cy="52" r="3" fill="currentColor" fill-opacity="0.5"/></svg>`,
+  handheld: `<svg class="console-icon" viewBox="0 0 100 100"><path d="M10 40c0-6 4-10 10-11l10-2c4-0.6 8 1 11 3.5 4 3 9 3 13 0 3-2.5 7-4.1 11-3.5l10 2c6 1 10 5 10 11v10c0 8-3 15-9 17l-10 3c-4 1.2-8-0.2-11-3l-4-4a6 6 0 0 0-8 0l-4 4c-3 2.8-7 4.2-11 3l-10-3c-6-2-9-9-9-17z" fill="currentColor" fill-opacity="0.12" stroke="currentColor" stroke-width="3.5" stroke-linejoin="round"/><rect x="38" y="38" width="24" height="18" rx="2" fill="currentColor" fill-opacity="0.2"/><path d="M22 44h8M26 40v8" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><circle cx="72" cy="42" r="3" fill="currentColor"/><circle cx="79" cy="48" r="3" fill="currentColor" fill-opacity="0.55"/></svg>`
+};
+
+const grid = document.getElementById('grid');
+
+// URL del backend de pagos (server.js). Rellénala con la URL real una vez
+// despliegues el backend (ver DEPLOY.md) — con esto vacío, "Finalizar
+// compra" seguirá funcionando en local en http://localhost:4242.
+const BACKEND_URL = 'http://localhost:4242';
+
+// Carrito en memoria: { sku: quantity }
+const cart = {};
+
+function addToCart(sku){
+  cart[sku] = (cart[sku] || 0) + 1;
+  updateCartCount();
+}
+
+function updateCartCount(){
+  const total = Object.values(cart).reduce((sum, qty) => sum + qty, 0);
+  document.getElementById('cart-count').textContent = total;
+}
+
+async function checkout(){
+  const items = Object.entries(cart).map(([sku, quantity]) => ({ sku, quantity }));
+
+  if (items.length === 0){
+    showToast('Tu cesta está vacía — añade alguna consola antes 👀');
+    return;
+  }
+
+  try {
+    const res = await fetch(`${BACKEND_URL}/create-checkout-session`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ items }),
+    });
+    const data = await res.json();
+
+    if (data.url){
+      window.location.href = data.url;
+    } else {
+      showToast('No se pudo iniciar el pago: ' + (data.error || 'error desconocido'));
+    }
+  } catch (err){
+    showToast('No se pudo conectar con el servidor de pago.');
+    console.error(err);
+  }
+}
+
+function euros(n){
+  return n.toLocaleString('es-ES', {minimumFractionDigits:2, maximumFractionDigits:2}) + ' €';
+}
+
+function render(filter){
+  grid.innerHTML = '';
+  PRODUCTS.filter(p => filter === 'all' || p.brand === filter).forEach(p => {
+    const savings = (p.market - p.price);
+    const pct = Math.round((savings / p.market) * 100);
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <div class="card-media" style="--brand-bg:${p.bg}">
+        <span class="badge-discount">-${pct}%</span>
+        <span class="badge-stock">${p.stock}</span>
+        ${ICONS[p.icon]}
+      </div>
+      <div class="card-body">
+        <div class="card-brand">${p.brandLabel.toUpperCase()}</div>
+        <h3 class="card-name">${p.name}</h3>
+        <div class="card-spec">${p.spec}</div>
+        <div class="price-row">
+          <span class="price-new">${euros(p.price)}</span>
+          <span class="price-old">${euros(p.market)}</span>
+        </div>
+        <div class="save-line">Ahorras ${euros(savings)}</div>
+        <button class="add-btn" data-sku="${p.id}" data-name="${p.name}">Añadir a la cesta</button>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+
+  grid.querySelectorAll('.add-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      addToCart(btn.dataset.sku);
+      btn.textContent = 'Añadida ✓';
+      btn.classList.add('added');
+      showToast(btn.dataset.name + ' añadida a la cesta');
+      setTimeout(() => { btn.textContent = 'Añadir a la cesta'; btn.classList.remove('added'); }, 1600);
+    });
+  });
+}
+
+function renderRefurb(){
+  const refurbGrid = document.getElementById('refurb-grid');
+  refurbGrid.innerHTML = '';
+  REFURB_PRODUCTS.forEach(p => {
+    const condClass = p.condition === 'Muy bueno' ? 'muybueno' : 'aceptable';
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <div class="card-media" style="--brand-bg:${p.bg}">
+        <span class="badge-condition ${condClass}">${p.condition}</span>
+        <span class="badge-units">${p.units} ${p.units === 1 ? 'unidad' : 'unidades'}</span>
+        ${ICONS[p.icon]}
+      </div>
+      <div class="card-body">
+        <div class="card-brand">${p.brandLabel.toUpperCase()} · REACONDICIONADO</div>
+        <h3 class="card-name">${p.name}</h3>
+        <div class="card-spec">${p.spec}</div>
+        <div class="condition-note">${p.conditionNote}</div>
+        <div class="price-row">
+          <span class="price-new">${euros(p.price)}</span>
+        </div>
+        <button class="add-btn" data-sku="${p.id}" data-name="${p.name} (reacondicionado, ${p.condition.toLowerCase()})">Añadir a la cesta</button>
+      </div>
+    `;
+    refurbGrid.appendChild(card);
+  });
+
+  refurbGrid.querySelectorAll('.add-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      addToCart(btn.dataset.sku);
+      btn.textContent = 'Añadida ✓';
+      btn.classList.add('added');
+      showToast(btn.dataset.name + ' añadida a la cesta');
+      setTimeout(() => { btn.textContent = 'Añadir a la cesta'; btn.classList.remove('added'); }, 1600);
+    });
+  });
+}
+
+document.querySelectorAll('.chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    render(chip.dataset.filter);
+  });
+});
+
+let toastTimer;
+function showToast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+render('all');
+renderRefurb();
+</script>
+
+</body>
+</html>
